@@ -1,0 +1,15 @@
+main: main.java.utility.Main
+name: WorldMC-Utility
+version: '1.2'
+description: Utilities for worldmc
+author: Uriyang (Khasar#2151)
+website: https://www.worldmc.net/home
+api-version: 1.16
+softdepend: [Vault]
+load: STARTUP
+commands:
+  utilsreload:
+   description: Reload the configuration
+   permission: wmc.reload
+   permission-message: No permission
+   usage: /<command>

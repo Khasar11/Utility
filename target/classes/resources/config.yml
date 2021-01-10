@@ -1,0 +1,44 @@
+#=====================#
+#     WMC-Utility     #
+#      by Uriang      #
+#=====================#
+# Discord:Khasar#2151 #
+#=====================#
+
+# Feature list:
+#   Void Generator (name: WorldMC-Utility)
+#   Auto broadcast
+#   Tablist
+
+#=====================#
+#  WMC-Auto-Broadcast #
+#=====================#
+
+ab:
+    enabled: true
+    time: 240 # In seconds
+    strings:
+        - "&2&lWorld&6&lMC &8&l» &7Follow the rules! &9www.worldmc.net/rules"
+        - "&2&lWorld&6&lMC &8&l» &7Join our discord here! &9www.worldmc.net/discord"
+        - "&2&lWorld&6&lMC &8&l» &7Check out the map here! &9www.worldmc.net/map"
+        - "&2&lWorld&6&lMC &8&l» &7Vote to earn rewards! &9www.worldmc.net/vote"
+        - "&2&lWorld&6&lMC &8&l» &7Want to be a premium user? &9www.worldmc.net/store"
+        
+#=====================#
+
+#=====================#
+#    WMC-Tablist      #
+#=====================#
+
+# Variables:
+# Player related: {USERNAME}, {DISPLAYNAME}, {PREFIX}, {SUFFIX}
+# Other: {MAXPLAYERS}, {PLAYERS}
+# \n for newline
+
+tab:
+    enabled: true
+    header: "&2&lWorld&6&lMC\n&cPlayers: &r{PLAYERS}&8/&r{MAXPLAYERS}"
+    footer: "&aDynmap: &rmap.worldmc.net"
+    username: "{PREFIX}{DISPLAYNAME}"
+        
+#=====================#
