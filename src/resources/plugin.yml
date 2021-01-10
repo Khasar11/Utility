@@ -1,6 +1,6 @@
 main: main.java.utility.Main
 name: WorldMC-Utility
-version: '1.2'
+version: '1.2.1'
 description: Utilities for worldmc
 author: Uriyang (Khasar#2151)
 website: https://www.worldmc.net/home

@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import net.md_5.bungee.api.ChatColor;
@@ -19,7 +20,6 @@ public class EventSetTab implements Listener {
 	}
 
 	String header, footer, player;
-	World world = Bukkit.getServer().getWorld("world");
 
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
@@ -40,6 +40,15 @@ public class EventSetTab implements Listener {
 			}.runTaskTimer(plugin, 0L, 200L);
 		}
 	}
+	
+	@EventHandler
+	public void onPlayerQuit(PlayerQuitEvent event) {
+		if (plugin.getConfig().getBoolean("tab.enabled")) {
+			for (Player p : Bukkit.getOnlinePlayers()) {
+				updateTab(p);
+			}
+		}
+	}
 
 	public void updateTab(Player p) {
 		header = replaceVariables(plugin.getConfig().getString("tab.header"), p);
@@ -51,6 +60,7 @@ public class EventSetTab implements Listener {
 	}
 
 	public String replaceVariables(String replaceString, Player p) {
+		String[] pGroups = Main.getChat().getPlayerGroups(p);
 		replaceString = replaceString.replace("{MAXPLAYERS}", plugin.getServer().getMaxPlayers() + "")
 				.replace("{PLAYERS}", plugin.getServer().getOnlinePlayers().size() + "")
 				.replace("{USERNAME}", p.getName()).replace("{DISPLAYNAME}", p.getDisplayName())
@@ -58,7 +68,11 @@ public class EventSetTab implements Listener {
 				.replace("{SUFFIX}", Main.getChat().getPlayerSuffix(p));
 		if (Main.getChat().getPlayerPrefix(p) == "") {
 			replaceString = replaceString.replace("{PREFIX}",
-					Main.getChat().getGroupPrefix(world, Main.getChat().getPlayerGroups(p)[0]));
+					Main.getChat().getGroupPrefix(p.getWorld(), pGroups[0]));
+		}
+		if (Main.getChat().getPlayerSuffix(p) == "") {
+			replaceString = replaceString.replace("{SUFFIX}",
+					Main.getChat().getGroupSuffix(p.getWorld(), pGroups[0]));
 		}
 		return ChatColor.translateAlternateColorCodes('&', replaceString);
 	}
