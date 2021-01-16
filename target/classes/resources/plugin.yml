@@ -1,6 +1,6 @@
 main: main.java.utility.Main
 name: WorldMC-Utility
-version: '1.2.1'
+version: '1.3.1'
 description: Utilities for worldmc
 author: Uriyang (Khasar#2151)
 website: https://www.worldmc.net/home
@@ -11,5 +11,10 @@ commands:
   utilsreload:
    description: Reload the configuration
    permission: wmc.reload
+   permission-message: No permission
+   usage: /<command>
+  wmcbroad:
+   description: Simple broadcast
+   permission: wmc.broad
    permission-message: No permission
    usage: /<command>

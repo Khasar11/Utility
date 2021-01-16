@@ -10,12 +10,15 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import net.ess3.api.IEssentials;
 import net.md_5.bungee.api.ChatColor;
 import net.milkbowl.vault.chat.Chat;
 
 public class Main extends JavaPlugin {
 
 	private static Chat chat = null;
+
+	private static IEssentials ess;
 
 	public FileConfiguration Config = getConfig();
 
@@ -34,10 +37,16 @@ public class Main extends JavaPlugin {
 		this.saveDefaultConfig();
 		getConfig();
 		plugin = this;
-		
+
 		Bukkit.getPluginManager().registerEvents(new EventSetTab(this), this);
-		
+
+		try {
+			ess = (IEssentials) Bukkit.getPluginManager().getPlugin("Essentials");
+		} catch (Exception ignore) {
+		}
+
 		getCommand("utilsreload").setExecutor(new CmdReload(this));
+		getCommand("wmcbroad").setExecutor(new CmdBroad(this));
 		setupChat();
 
 		if (plugin.getConfig().getBoolean("ab.enabled")) {
@@ -54,6 +63,7 @@ public class Main extends JavaPlugin {
 				}
 			}.runTaskTimer(plugin, 0L, plugin.getConfig().getInt("ab.time") * 20);
 		}
+
 	}
 
 	public String getBroadMessage() {
@@ -75,5 +85,9 @@ public class Main extends JavaPlugin {
 
 	public static Chat getChat() {
 		return chat;
+	}
+
+	public static IEssentials getEss() {
+		return ess;
 	}
 }

@@ -17,9 +17,9 @@ public class EventSetTab implements Listener {
 	public EventSetTab(Main plugin) {
 		this.plugin = plugin;
 	}
-
+	
 	String header, footer, player;
-
+	
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		if (plugin.getConfig().getBoolean("tab.enabled")) {
@@ -39,7 +39,7 @@ public class EventSetTab implements Listener {
 			}.runTaskTimer(plugin, 0L, 200L);
 		}
 	}
-	
+
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		if (plugin.getConfig().getBoolean("tab.enabled")) {
@@ -60,18 +60,25 @@ public class EventSetTab implements Listener {
 
 	public String replaceVariables(String replaceString, Player p) {
 		String[] pGroups = Main.getChat().getPlayerGroups(p);
+		try {
+			int pCount = 0;
+			for (Player plr : Bukkit.getOnlinePlayers()) {
+				if (!Main.getEss().getUser(plr).isVanished()) {
+					pCount++;
+				}
+			}
+			replaceString = replaceString.replace("{PLAYERS}", pCount + "");
+		} catch (Exception notUsingEss) {}
 		replaceString = replaceString.replace("{MAXPLAYERS}", plugin.getServer().getMaxPlayers() + "")
 				.replace("{PLAYERS}", plugin.getServer().getOnlinePlayers().size() + "")
 				.replace("{USERNAME}", p.getName()).replace("{DISPLAYNAME}", p.getDisplayName())
 				.replace("{PREFIX}", Main.getChat().getPlayerPrefix(p))
 				.replace("{SUFFIX}", Main.getChat().getPlayerSuffix(p));
 		if (Main.getChat().getPlayerPrefix(p) == "") {
-			replaceString = replaceString.replace("{PREFIX}",
-					Main.getChat().getGroupPrefix(p.getWorld(), pGroups[0]));
+			replaceString = replaceString.replace("{PREFIX}", Main.getChat().getGroupPrefix(p.getWorld(), pGroups[0]));
 		}
 		if (Main.getChat().getPlayerSuffix(p) == "") {
-			replaceString = replaceString.replace("{SUFFIX}",
-					Main.getChat().getGroupSuffix(p.getWorld(), pGroups[0]));
+			replaceString = replaceString.replace("{SUFFIX}", Main.getChat().getGroupSuffix(p.getWorld(), pGroups[0]));
 		}
 		return ChatColor.translateAlternateColorCodes('&', replaceString);
 	}
