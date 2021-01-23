@@ -38,7 +38,7 @@ ab:
 #=====================#
 
 #=====================#
-#    WMC-Tablist      #
+#   WMC-Tablist//GT   #
 #=====================#
 
 # Variables:
@@ -53,5 +53,9 @@ tab:
     header: "&2&lWorld&6&lMC\n&cPlayers: &r{PLAYERS}&8/&r{MAXPLAYERS}"
     footer: "&aDynmap: &rmap.worldmc.net"
     username: "{PREFIX}{DISPLAYNAME}"
+    organize: true
         
+gamer-tag-add-prefix:
+    enabled: true
+    
 #=====================#

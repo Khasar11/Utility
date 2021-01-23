@@ -1,5 +1,6 @@
 package main.java.utility;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.bukkit.Bukkit;
@@ -16,6 +17,7 @@ import org.bukkit.scoreboard.Team.Option;
 import org.bukkit.scoreboard.Team.OptionStatus;
 
 import net.md_5.bungee.api.ChatColor;
+import net.milkbowl.vault.chat.Chat;
 
 public class EventSetTab implements Listener {
 
@@ -29,20 +31,19 @@ public class EventSetTab implements Listener {
 
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		if (plugin.getConfig().getBoolean("tab.enabled")) {
-			Player p = event.getPlayer();
+		Player p = event.getPlayer();
+		if (plugin.getConfig().getBoolean("tab.organize")
+				|| plugin.getConfig().getBoolean("gamer-tag-add-prefix.enabled")) {
 			setWeight(p);
+		}
+		if (plugin.getConfig().getBoolean("tab.enabled")) {
 			for (Player subP : Bukkit.getOnlinePlayers()) {
 				updateTab(subP);
 			}
 			new BukkitRunnable() {
 				@Override
 				public void run() {
-					try {
-						updateTab(p);
-					} catch (Exception cancel) {
-						cancel();
-					}
+					updateTab(p);
 				}
 			}.runTaskTimer(plugin, 0L, 200L);
 		}
@@ -51,8 +52,16 @@ public class EventSetTab implements Listener {
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		if (plugin.getConfig().getBoolean("tab.enabled")) {
-			for (Player p : Bukkit.getOnlinePlayers()) {
-				updateTab(p);
+			for (Player subP : Bukkit.getOnlinePlayers()) {
+				updateTab(subP);
+			}
+			Player p = event.getPlayer();
+			Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
+			ArrayList<Team> teams = new ArrayList<>(scoreboard.getTeams());
+			for (Team t : teams) {
+				if (t.getName().contains(p.getUniqueId().toString().substring(0, 8))) {
+					t.unregister();
+				}
 			}
 		}
 	}
@@ -67,7 +76,8 @@ public class EventSetTab implements Listener {
 	}
 
 	public String replaceVariables(String replaceString, Player p) {
-		String[] pGroups = Main.getChat().getPlayerGroups(p);
+		Chat c = Main.getChat();
+		String[] pGroups = c.getPlayerGroups(p);
 		try {
 			int pCount = 0;
 			for (Player plr : Bukkit.getOnlinePlayers()) {
@@ -81,13 +91,12 @@ public class EventSetTab implements Listener {
 		replaceString = replaceString.replace("{MAXPLAYERS}", plugin.getServer().getMaxPlayers() + "")
 				.replace("{PLAYERS}", plugin.getServer().getOnlinePlayers().size() + "")
 				.replace("{USERNAME}", p.getName()).replace("{DISPLAYNAME}", p.getDisplayName())
-				.replace("{PREFIX}", Main.getChat().getPlayerPrefix(p))
-				.replace("{SUFFIX}", Main.getChat().getPlayerSuffix(p));
-		if (Main.getChat().getPlayerPrefix(p) == "") {
-			replaceString = replaceString.replace("{PREFIX}", Main.getChat().getGroupPrefix(p.getWorld(), pGroups[0]));
+				.replace("{PREFIX}", c.getPlayerPrefix(p)).replace("{SUFFIX}", c.getPlayerSuffix(p));
+		if (c.getPlayerPrefix(p) == "") {
+			replaceString = replaceString.replace("{PREFIX}", c.getGroupPrefix(p.getWorld(), pGroups[0]));
 		}
-		if (Main.getChat().getPlayerSuffix(p) == "") {
-			replaceString = replaceString.replace("{SUFFIX}", Main.getChat().getGroupSuffix(p.getWorld(), pGroups[0]));
+		if (c.getPlayerSuffix(p) == "") {
+			replaceString = replaceString.replace("{SUFFIX}", c.getGroupSuffix(p.getWorld(), pGroups[0]));
 		}
 		return ChatColor.translateAlternateColorCodes('&', replaceString);
 	}
@@ -104,19 +113,24 @@ public class EventSetTab implements Listener {
 				break;
 			}
 		}
-		try {
-			pTeam = scoreboard.getTeam(toUse);
-			pTeam.addEntry(p.getName());
-		} catch (Exception creatingNewTeam) {
-			pTeam = scoreboard.registerNewTeam(toUse);
-			pTeam.setOption(Option.COLLISION_RULE,
-					OptionStatus.valueOf(plugin.getConfig().getString("teams.collisionRule")));
-			pTeam.setOption(Option.DEATH_MESSAGE_VISIBILITY,
-					OptionStatus.valueOf(plugin.getConfig().getString("teams.deathMessageVisibility")));
-			pTeam.setOption(Option.NAME_TAG_VISIBILITY,
-					OptionStatus.valueOf(plugin.getConfig().getString("teams.nametagVisibility")));
-
-			pTeam.addEntry(p.getName());
+		Chat c = Main.getChat();
+		String puuidsub = p.getUniqueId().toString().substring(0, 8);
+		pTeam = scoreboard.registerNewTeam(toUse + "-" + puuidsub);
+		if (plugin.getConfig().getBoolean("gamer-tag-add-prefix.enabled")) {
+			pTeam.setPrefix(ChatColor.translateAlternateColorCodes('&', c.getPlayerPrefix(p)));
+			if (c.getPlayerPrefix(p) == "") {
+				pTeam.setPrefix(c.getGroupPrefix(p.getWorld(), c.getPlayerGroups(p)[0]));
+			}
 		}
+
+		pTeam.setOption(Option.COLLISION_RULE,
+				OptionStatus.valueOf(plugin.getConfig().getString("teams.collisionRule")));
+		pTeam.setOption(Option.DEATH_MESSAGE_VISIBILITY,
+				OptionStatus.valueOf(plugin.getConfig().getString("teams.deathMessageVisibility")));
+		pTeam.setOption(Option.NAME_TAG_VISIBILITY,
+				OptionStatus.valueOf(plugin.getConfig().getString("teams.nametagVisibility")));
+
+		pTeam.addEntry(p.getName());
+
 	}
 }
