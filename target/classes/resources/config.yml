@@ -19,9 +19,7 @@
 teams:
     collisionRule: 'ALWAYS'
     deathMessageVisibility: 'ALWAYS'
-    friendlyFire: 'ALWAYS'
     nametagVisibility: 'ALWAYS'
-    seeFriendlyInvisibles: 'NEVER'
 
 #=====================#
 #  WMC-Auto-Broadcast #
@@ -48,22 +46,12 @@ ab:
 # Other: {MAXPLAYERS}, {PLAYERS}
 # \n for newline
 
+# Tab is sorted BY PERMISSION, wmctab.0 is highest, wmctab.1 is next and so on
+
 tab:
     enabled: true
     header: "&2&lWorld&6&lMC\n&cPlayers: &r{PLAYERS}&8/&r{MAXPLAYERS}"
     footer: "&aDynmap: &rmap.worldmc.net"
     username: "{PREFIX}{DISPLAYNAME}"
         
-#=====================#
-
-#=====================#
-#  WMC-EasyCommands   #
-#=====================#
-
-custom-reply-commands:
-    enabled: true
-    commands:
-        
-
-
 #=====================#

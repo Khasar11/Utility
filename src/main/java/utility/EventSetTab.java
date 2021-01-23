@@ -1,12 +1,19 @@
 package main.java.utility;
 
+import java.util.Iterator;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.permissions.PermissionAttachmentInfo;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
+import org.bukkit.scoreboard.Team.Option;
+import org.bukkit.scoreboard.Team.OptionStatus;
 
 import net.md_5.bungee.api.ChatColor;
 
@@ -17,13 +24,14 @@ public class EventSetTab implements Listener {
 	public EventSetTab(Main plugin) {
 		this.plugin = plugin;
 	}
-	
+
 	String header, footer, player;
-	
+
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		if (plugin.getConfig().getBoolean("tab.enabled")) {
 			Player p = event.getPlayer();
+			setWeight(p);
 			for (Player subP : Bukkit.getOnlinePlayers()) {
 				updateTab(subP);
 			}
@@ -68,12 +76,11 @@ public class EventSetTab implements Listener {
 				}
 			}
 			replaceString = replaceString.replace("{PLAYERS}", pCount + "");
-		} catch (Exception notUsingEss) {}
-		replaceString = replaceString
-				.replace("{MAXPLAYERS}", plugin.getServer().getMaxPlayers() + "")
+		} catch (Exception notUsingEss) {
+		}
+		replaceString = replaceString.replace("{MAXPLAYERS}", plugin.getServer().getMaxPlayers() + "")
 				.replace("{PLAYERS}", plugin.getServer().getOnlinePlayers().size() + "")
-				.replace("{USERNAME}", p.getName())
-				.replace("{DISPLAYNAME}", p.getDisplayName())
+				.replace("{USERNAME}", p.getName()).replace("{DISPLAYNAME}", p.getDisplayName())
 				.replace("{PREFIX}", Main.getChat().getPlayerPrefix(p))
 				.replace("{SUFFIX}", Main.getChat().getPlayerSuffix(p));
 		if (Main.getChat().getPlayerPrefix(p) == "") {
@@ -83,5 +90,33 @@ public class EventSetTab implements Listener {
 			replaceString = replaceString.replace("{SUFFIX}", Main.getChat().getGroupSuffix(p.getWorld(), pGroups[0]));
 		}
 		return ChatColor.translateAlternateColorCodes('&', replaceString);
+	}
+
+	public void setWeight(Player p) {
+		Team pTeam;
+		Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
+		String toUse = "1000";
+		Iterator<PermissionAttachmentInfo> iterator = p.getEffectivePermissions().iterator();
+		while (iterator.hasNext()) {
+			String perm = iterator.next().getPermission();
+			if (perm.contains("wmctab")) {
+				toUse = perm.replace("wmctab.", "");
+				break;
+			}
+		}
+		try {
+			pTeam = scoreboard.getTeam(toUse);
+			pTeam.addEntry(p.getName());
+		} catch (Exception creatingNewTeam) {
+			pTeam = scoreboard.registerNewTeam(toUse);
+			pTeam.setOption(Option.COLLISION_RULE,
+					OptionStatus.valueOf(plugin.getConfig().getString("teams.collisionRule")));
+			pTeam.setOption(Option.DEATH_MESSAGE_VISIBILITY,
+					OptionStatus.valueOf(plugin.getConfig().getString("teams.deathMessageVisibility")));
+			pTeam.setOption(Option.NAME_TAG_VISIBILITY,
+					OptionStatus.valueOf(plugin.getConfig().getString("teams.nametagVisibility")));
+
+			pTeam.addEntry(p.getName());
+		}
 	}
 }
