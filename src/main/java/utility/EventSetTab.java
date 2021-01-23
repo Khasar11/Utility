@@ -115,22 +115,24 @@ public class EventSetTab implements Listener {
 		}
 		Chat c = Main.getChat();
 		String puuidsub = p.getUniqueId().toString().substring(0, 8);
-		pTeam = scoreboard.registerNewTeam(toUse + "-" + puuidsub);
-		if (plugin.getConfig().getBoolean("gamer-tag-add-prefix.enabled")) {
-			pTeam.setPrefix(ChatColor.translateAlternateColorCodes('&', c.getPlayerPrefix(p)));
-			if (c.getPlayerPrefix(p) == "") {
-				pTeam.setPrefix(c.getGroupPrefix(p.getWorld(), c.getPlayerGroups(p)[0]));
+		try {
+			pTeam = scoreboard.registerNewTeam(toUse + "-" + puuidsub);
+			if (plugin.getConfig().getBoolean("gamer-tag-add-prefix.enabled")) {
+				pTeam.setPrefix(ChatColor.translateAlternateColorCodes('&', c.getPlayerPrefix(p)));
+				if (c.getPlayerPrefix(p) == "") {
+					pTeam.setPrefix(c.getGroupPrefix(p.getWorld(), c.getPlayerGroups(p)[0]));
+				}
 			}
+
+			pTeam.setOption(Option.COLLISION_RULE,
+					OptionStatus.valueOf(plugin.getConfig().getString("teams.collisionRule")));
+			pTeam.setOption(Option.DEATH_MESSAGE_VISIBILITY,
+					OptionStatus.valueOf(plugin.getConfig().getString("teams.deathMessageVisibility")));
+			pTeam.setOption(Option.NAME_TAG_VISIBILITY,
+					OptionStatus.valueOf(plugin.getConfig().getString("teams.nametagVisibility")));
+
+			pTeam.addEntry(p.getName());
+		} catch (Exception ignore) {
 		}
-
-		pTeam.setOption(Option.COLLISION_RULE,
-				OptionStatus.valueOf(plugin.getConfig().getString("teams.collisionRule")));
-		pTeam.setOption(Option.DEATH_MESSAGE_VISIBILITY,
-				OptionStatus.valueOf(plugin.getConfig().getString("teams.deathMessageVisibility")));
-		pTeam.setOption(Option.NAME_TAG_VISIBILITY,
-				OptionStatus.valueOf(plugin.getConfig().getString("teams.nametagVisibility")));
-
-		pTeam.addEntry(p.getName());
-
 	}
 }
