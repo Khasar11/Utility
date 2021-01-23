@@ -69,9 +69,11 @@ public class EventSetTab implements Listener {
 			}
 			replaceString = replaceString.replace("{PLAYERS}", pCount + "");
 		} catch (Exception notUsingEss) {}
-		replaceString = replaceString.replace("{MAXPLAYERS}", plugin.getServer().getMaxPlayers() + "")
+		replaceString = replaceString
+				.replace("{MAXPLAYERS}", plugin.getServer().getMaxPlayers() + "")
 				.replace("{PLAYERS}", plugin.getServer().getOnlinePlayers().size() + "")
-				.replace("{USERNAME}", p.getName()).replace("{DISPLAYNAME}", p.getDisplayName())
+				.replace("{USERNAME}", p.getName())
+				.replace("{DISPLAYNAME}", p.getDisplayName())
 				.replace("{PREFIX}", Main.getChat().getPlayerPrefix(p))
 				.replace("{SUFFIX}", Main.getChat().getPlayerSuffix(p));
 		if (Main.getChat().getPlayerPrefix(p) == "") {

@@ -10,6 +10,19 @@
 #   Auto broadcast
 #   Tablist
 
+# General options:
+
+# For extra use with tab sorted teams if wanted
+# Set to ALWAYS or NEVER, 
+# Setting collisionRule to NEVER can be used to make
+# NoCollision in for example lobby
+teams:
+    collisionRule: 'ALWAYS'
+    deathMessageVisibility: 'ALWAYS'
+    friendlyFire: 'ALWAYS'
+    nametagVisibility: 'ALWAYS'
+    seeFriendlyInvisibles: 'NEVER'
+
 #=====================#
 #  WMC-Auto-Broadcast #
 #=====================#
@@ -41,4 +54,16 @@ tab:
     footer: "&aDynmap: &rmap.worldmc.net"
     username: "{PREFIX}{DISPLAYNAME}"
         
+#=====================#
+
+#=====================#
+#  WMC-EasyCommands   #
+#=====================#
+
+custom-reply-commands:
+    enabled: true
+    commands:
+        
+
+
 #=====================#

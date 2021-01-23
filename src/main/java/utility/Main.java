@@ -10,6 +10,9 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import main.java.utility.cmd.CmdBroad;
+import main.java.utility.cmd.CmdReload;
+import main.java.utility.generator.VG;
 import net.ess3.api.IEssentials;
 import net.md_5.bungee.api.ChatColor;
 import net.milkbowl.vault.chat.Chat;
@@ -17,11 +20,9 @@ import net.milkbowl.vault.chat.Chat;
 public class Main extends JavaPlugin {
 
 	private static Chat chat = null;
-
 	private static IEssentials ess;
 
 	public FileConfiguration Config = getConfig();
-
 	public static Main plugin;
 
 	Random rint = new Random();

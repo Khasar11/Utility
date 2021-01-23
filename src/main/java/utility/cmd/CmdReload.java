@@ -1,9 +1,11 @@
-package main.java.utility;
+package main.java.utility.cmd;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+
+import main.java.utility.Main;
 
 public class CmdReload implements CommandExecutor {
 
