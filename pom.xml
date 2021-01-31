@@ -89,6 +89,11 @@
 			<url>https://ci.ender.zone/plugin/repository/everything/</url>
 		</repository>
 
+		<repository>
+			<id>bintray-repo</id>
+			<url>https://dl.bintray.com/ichbinjoe/public/</url>
+		</repository>
+
 	</repositories>
 
 	<dependencies>
@@ -111,6 +116,27 @@
 			<groupId>net.ess3</groupId>
 			<artifactId>EssentialsX</artifactId>
 			<version>2.18.2</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.vexsoftware</groupId>
+			<artifactId>nuvotifier-universal</artifactId>
+			<version>2.6.0</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.github.TownyAdvanced</groupId>
+			<artifactId>TownyChat</artifactId>
+			<version>0.86</version>
+			<scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.github.TownyAdvanced</groupId>
+			<artifactId>Towny</artifactId>
+			<version>0.96.5.0</version>
 			<scope>provided</scope>
 		</dependency>
 

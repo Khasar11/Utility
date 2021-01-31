@@ -17,9 +17,9 @@
 # Setting collisionRule to NEVER can be used to make
 # NoCollision in for example lobby
 teams:
-    collisionRule: 'ALWAYS'
-    deathMessageVisibility: 'ALWAYS'
-    nametagVisibility: 'ALWAYS'
+    collisionRule: 'ALWAYS' # Setting this to NEVER would remove player collision
+    deathMessageVisibility: 'ALWAYS' # Setting this to NEVER would remove death messages
+    nametagVisibility: 'ALWAYS' # Setting this to NEVER would remove name tag displays
 
 #=====================#
 #  WMC-Auto-Broadcast #
@@ -42,7 +42,7 @@ ab:
 #=====================#
 
 # Variables:
-# Player related: {USERNAME}, {DISPLAYNAME}, {PREFIX}, {SUFFIX}
+# Player related: {USERNAME}, {DISPLAYNAME}, {PREFIX}, {SUFFIX}, {TOWNYCOLOUR}
 # Other: {MAXPLAYERS}, {PLAYERS}
 # \n for newline
 
@@ -59,3 +59,39 @@ gamer-tag-add-prefix:
     enabled: true
     
 #=====================#
+
+#=====================#
+#  WMC-Vote-Listener  #
+#=====================#
+# For P2, unfinished
+vl:
+    enabled: true
+    
+    # Requires a MySQL database
+    use-streaks: true
+    
+    # Data for MySQL database
+    host: ''
+    port: '3306'
+    database: ''
+    username: ''
+    password: ''
+    
+    # Give every-day-commands in addition to streaks?
+    additive-every-day-commands: false
+    
+    # Rewarded every day
+    every-day-commands:
+        - 'give {USERNAME} gold_ingot 8'
+        
+    # Streak rewards, use pre-layed out format
+    streak-rewards:
+        - 1:
+            days: 5
+            commands:
+                - 'give {USERNAME} gold_ingot 16'
+        - 2:
+            days: 30
+            commands:
+                - 'give {USERNAME} elytra 1'
+    

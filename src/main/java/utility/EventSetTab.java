@@ -16,9 +16,14 @@ import org.bukkit.scoreboard.Team;
 import org.bukkit.scoreboard.Team.Option;
 import org.bukkit.scoreboard.Team.OptionStatus;
 
+import com.palmergames.bukkit.TownyChat.config.ChatSettings;
+import com.palmergames.bukkit.towny.object.Resident;
+import com.palmergames.bukkit.towny.object.TownyUniverse;
+
 import net.md_5.bungee.api.ChatColor;
 import net.milkbowl.vault.chat.Chat;
 
+@SuppressWarnings("deprecation")
 public class EventSetTab implements Listener {
 
 	private Main plugin;
@@ -92,6 +97,12 @@ public class EventSetTab implements Listener {
 				.replace("{PLAYERS}", plugin.getServer().getOnlinePlayers().size() + "")
 				.replace("{USERNAME}", p.getName()).replace("{DISPLAYNAME}", p.getDisplayName())
 				.replace("{PREFIX}", c.getPlayerPrefix(p)).replace("{SUFFIX}", c.getPlayerSuffix(p));
+		try {
+			Resident r = TownyUniverse.getDataSource().getResident(p.getName());
+			replaceString = replaceString.replace("{TOWNYCOLOUR}", r.isKing() ? ChatSettings.getKingColour()
+					: (r.isMayor() ? ChatSettings.getMayorColour() : ChatSettings.getResidentColour()));
+		} catch (Exception noTowny) {
+		}
 		if (c.getPlayerPrefix(p) == "") {
 			replaceString = replaceString.replace("{PREFIX}", c.getGroupPrefix(p.getWorld(), pGroups[0]));
 		}

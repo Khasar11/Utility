@@ -1,6 +1,6 @@
 main: main.java.utility.Main
 name: WorldMC-Utility
-version: '1.3.5'
+version: '1.4'
 description: Utilities for worldmc
 author: Uriyang (Khasar#2151)
 website: https://www.worldmc.net/home
@@ -17,4 +17,9 @@ commands:
    description: Simple broadcast
    permission: wmc.broad
    permission-message: No permission
-   usage: /<command>
+   usage: /<command> 
+  fakevote:
+   description: Cast a fake vote
+   permission: wmc.fakevote
+   permission-message: No permission
+   usage: /<command> [player]

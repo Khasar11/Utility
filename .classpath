@@ -13,8 +13,11 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="C:/Users/kh/Desktop/main/div/buildtools/spigot-1.16.4.jar"/>
-	<classpathentry kind="lib" path="C:/Users/kh/Desktop/main/div/testing 2/plugins/Vault(1).jar"/>
 	<classpathentry kind="lib" path="C:/Users/kh/Downloads/EssentialsX-2.18.2.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/kh/Downloads/nuvotifier-2.7.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/kh/Downloads/TownyChat-0.86.jar"/>
+	<classpathentry kind="lib" path="C:/Users/kh/Downloads/Towny-0.96.5.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/kh/Downloads/Vault(1).jar"/>
 	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
 		<attributes>
 			<attribute name="maven.pomderived" value="true"/>
