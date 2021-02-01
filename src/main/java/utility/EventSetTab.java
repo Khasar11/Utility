@@ -57,17 +57,23 @@ public class EventSetTab implements Listener {
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		if (plugin.getConfig().getBoolean("tab.enabled")) {
-			for (Player subP : Bukkit.getOnlinePlayers()) {
-				updateTab(subP);
-			}
-			Player p = event.getPlayer();
-			UUID pu = p.getUniqueId();
-			Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
-			for (Team t : scoreboard.getTeams()) {
-				if (t.getName().contains(pu.toString().substring(0, 8))) {
-					t.unregister();
+			new BukkitRunnable() {
+				@Override
+				public void run() {
+
+					for (Player subP : Bukkit.getOnlinePlayers()) {
+						updateTab(subP);
+					}
+					Player p = event.getPlayer();
+					UUID pu = p.getUniqueId();
+					Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
+					for (Team t : scoreboard.getTeams()) {
+						if (t.getName().contains(pu.toString().substring(0, 8))) {
+							t.unregister();
+						}
+					}
 				}
-			}
+			}.runTaskAsynchronously(plugin);
 		}
 	}
 
@@ -82,6 +88,7 @@ public class EventSetTab implements Listener {
 
 	public String replaceVariables(String replaceString, Player p) {
 		Chat c = Main.getChat();
+		Boolean isUsingT = plugin.getServer().getPluginManager().isPluginEnabled("Towny");
 		String[] pGroups = c.getPlayerGroups(p);
 		try {
 			int pCount = 0;
@@ -98,10 +105,13 @@ public class EventSetTab implements Listener {
 				.replace("{USERNAME}", p.getName()).replace("{DISPLAYNAME}", p.getDisplayName())
 				.replace("{PREFIX}", c.getPlayerPrefix(p)).replace("{SUFFIX}", c.getPlayerSuffix(p));
 		try {
-			Resident r = TownyUniverse.getDataSource().getResident(p.getName());
-			replaceString = replaceString.replace("{TOWNYCOLOUR}", r.isKing() ? ChatSettings.getKingColour()
-					: (r.isMayor() ? ChatSettings.getMayorColour() : ChatSettings.getResidentColour()));
+			if (isUsingT) {
+				Resident r = TownyUniverse.getDataSource().getResident(p.getName());
+				replaceString = replaceString.replace("{TOWNYCOLOUR}", r.isKing() ? ChatSettings.getKingColour()
+						: (r.isMayor() ? ChatSettings.getMayorColour() : ChatSettings.getResidentColour()));
+			}
 		} catch (Exception noTowny) {
+			replaceString = replaceString.replace("{TOWNYCOLOUR}", "");
 		}
 		if (c.getPlayerPrefix(p) == "") {
 			replaceString = replaceString.replace("{PREFIX}", c.getGroupPrefix(p.getWorld(), pGroups[0]));
