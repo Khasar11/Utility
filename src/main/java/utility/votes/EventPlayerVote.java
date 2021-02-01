@@ -10,7 +10,7 @@ import com.vexsoftware.votifier.model.VotifierEvent;
 
 public class EventPlayerVote implements Listener {
 
-	/*private Main plugin;
+	private Main plugin;
 
 	public EventPlayerVote(Main plugin) {
 		this.plugin = plugin;
@@ -20,6 +20,6 @@ public class EventPlayerVote implements Listener {
     public void onVotifierEvent(VotifierEvent event) {
         Vote vote = event.getVote();
         
-    } */
+    } 
 	
 }

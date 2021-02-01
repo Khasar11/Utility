@@ -1,7 +1,7 @@
 package main.java.utility;
 
-import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -61,10 +61,10 @@ public class EventSetTab implements Listener {
 				updateTab(subP);
 			}
 			Player p = event.getPlayer();
+			UUID pu = p.getUniqueId();
 			Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
-			ArrayList<Team> teams = new ArrayList<>(scoreboard.getTeams());
-			for (Team t : teams) {
-				if (t.getName().contains(p.getUniqueId().toString().substring(0, 8))) {
+			for (Team t : scoreboard.getTeams()) {
+				if (t.getName().contains(pu.toString().substring(0, 8))) {
 					t.unregister();
 				}
 			}

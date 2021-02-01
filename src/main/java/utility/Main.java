@@ -1,9 +1,9 @@
 package main.java.utility;
 
-/*import java.sql.Connection;
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.Statement; */
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -15,9 +15,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import main.java.utility.cmd.CmdBroad;
+import main.java.utility.cmd.CmdWmsg;
 import main.java.utility.cmd.CmdReload;
 import main.java.utility.generator.VG;
-//import main.java.utility.votes.EventPlayerVote;
+import main.java.utility.votes.EventPlayerVote;
 import net.ess3.api.IEssentials;
 import net.md_5.bungee.api.ChatColor;
 import net.milkbowl.vault.chat.Chat;
@@ -33,9 +34,9 @@ public class Main extends JavaPlugin {
 	Random rint = new Random();
 	int currentPos;
 
-	/*static String host, port, database, username, password;
+	static String host, port, database, username, password;
 	static Connection connection;
-	static Statement vlstatement; */
+	static Statement vlstatement;
 
 	@Override
 	public void onEnable() {
@@ -54,9 +55,9 @@ public class Main extends JavaPlugin {
 			ess = (IEssentials) Bukkit.getPluginManager().getPlugin("Essentials");
 		} catch (Exception ignore) {
 		}
-
 		getCommand("utilsreload").setExecutor(new CmdReload(this));
 		getCommand("wmcbroad").setExecutor(new CmdBroad(this));
+		getCommand("wmsg").setExecutor(new CmdWmsg());
 		setupChat();
 
 		if (Config.getBoolean("ab.enabled")) {
@@ -72,9 +73,9 @@ public class Main extends JavaPlugin {
 					currentPos++;
 				}
 			}.runTaskTimer(plugin, 0L, Config.getInt("ab.time") * 20);
-		}}
-		/*
-		host = Config.getString("vl.host");
+		}
+
+		/*host = Config.getString("vl.host");
 		port = Config.getString("vl.port");
 		database = Config.getString("vl.database");
 		username = Config.getString("vl.username");
@@ -106,10 +107,9 @@ public class Main extends JavaPlugin {
 						}
 					}
 				}
-			}).runTaskTimerAsynchronously(plugin, 60 * 20, 60 * 20);
-		} 
-
-	} 
+			}).runTaskTimerAsynchronously(plugin, 60 * 20, 60 * 20); 
+		} */
+	}
 
 	public void openConnection() throws SQLException, ClassNotFoundException {
 		if (connection != null && !connection.isClosed()) {
@@ -118,7 +118,7 @@ public class Main extends JavaPlugin {
 		Class.forName("com.mysql.jdbc.Driver");
 		connection = DriverManager.getConnection("jdbc:mysql://" + Main.host + ":" + Main.port + "/" + Main.database,
 				Main.username, Main.password);
-	} */
+	}
 
 	@Override
 	public VG getDefaultWorldGenerator(String worldName, String id) {
@@ -149,7 +149,7 @@ public class Main extends JavaPlugin {
 	public static IEssentials getEss() {
 		return ess;
 	}
-	/*
+
 	public static void setUUIDDBValue(String table, String uuid, String columnToSet, String value) throws SQLException {
 		if (readUUIDDBvalue(table, uuid, columnToSet) != "") {
 			vlstatement.executeUpdate(
@@ -158,11 +158,13 @@ public class Main extends JavaPlugin {
 		}
 		vlstatement.executeUpdate(
 				"INSERT INTO " + table + " (UUID, " + columnToSet + ") VALUES (" + uuid + "," + value + ");");
+		vlstatement.executeUpdate("IF COL_LENGTH('" + table + "','" + columnToSet + "') IS NULL BEGIN ALTER TABLE "
+				+ table + "ADD " + columnToSet + " varchar(255) END");
 	}
 
 	public static String readUUIDDBvalue(String table, String uuid, String columnToRead) throws SQLException {
 		String t = vlstatement.executeQuery("SELECT " + columnToRead + " FROM " + table + " WHERE UUID LIKE" + uuid)
 				.toString();
 		return (t != null || t == "" ? t : "");
-	} */
+	}
 }
