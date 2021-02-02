@@ -115,7 +115,7 @@ public class Main extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		for (Team t : Bukkit.getScoreboardManager().getMainScoreboard().getTeams()) {
-			if (t.toString().contains("-")) t.unregister();;
+			 t.unregister();
 		}
 	}
 
