@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scoreboard.Team;
 
 import main.java.utility.cmd.CmdBroad;
 import main.java.utility.cmd.CmdWmsg;
@@ -109,6 +110,13 @@ public class Main extends JavaPlugin {
 				}
 			}).runTaskTimerAsynchronously(plugin, 60 * 20, 60 * 20); 
 		} */
+	}
+	
+	@Override
+	public void onDisable() {
+		for (Team t : Bukkit.getScoreboardManager().getMainScoreboard().getTeams()) {
+			if (t.toString().contains("-")) t.unregister();;
+		}
 	}
 
 	public void openConnection() throws SQLException, ClassNotFoundException {
