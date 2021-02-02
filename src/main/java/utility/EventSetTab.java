@@ -125,7 +125,7 @@ public class EventSetTab implements Listener {
 	public void setWeight(Player p) {
 		Team pTeam;
 		Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
-		String toUse = "1000";
+		String toUse = "_";
 		Iterator<PermissionAttachmentInfo> iterator = p.getEffectivePermissions().iterator();
 		while (iterator.hasNext()) {
 			String perm = iterator.next().getPermission();
