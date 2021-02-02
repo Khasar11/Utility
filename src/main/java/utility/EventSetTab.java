@@ -48,7 +48,8 @@ public class EventSetTab implements Listener {
 			new BukkitRunnable() {
 				@Override
 				public void run() {
-					updateTab(p);
+					if (p.isOnline()) updateTab(p);
+					else cancel();
 				}
 			}.runTaskTimer(plugin, 0L, 200L);
 		}
