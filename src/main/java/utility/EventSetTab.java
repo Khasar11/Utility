@@ -1,5 +1,7 @@
 package main.java.utility;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.UUID;
 
@@ -108,9 +110,9 @@ public class EventSetTab implements Listener {
 		} catch (Exception noTowny) {
 			replaceString = replaceString.replace("{TOWNYCOLOUR}", "");
 		}
-		replaceString = (c.getPlayerPrefix(p) == null ? replaceString.replace("{PREFIX}", c.getPlayerPrefix(p))
+		replaceString = (c.getPlayerPrefix(p) != null ? replaceString.replace("{PREFIX}", c.getPlayerPrefix(p))
 				: replaceString.replace("{PREFIX}", c.getGroupPrefix(p.getWorld(), pGroups[0])));
-		replaceString = (c.getPlayerSuffix(p) == null ? replaceString.replace("{SUFFIX}", c.getPlayerSuffix(p))
+		replaceString = (c.getPlayerSuffix(p) != null ? replaceString.replace("{SUFFIX}", c.getPlayerSuffix(p))
 				: replaceString.replace("{SUFFIX}", c.getGroupSuffix(p.getWorld(), pGroups[0])));
 		return ChatColor.translateAlternateColorCodes('&', replaceString);
 	}
@@ -119,14 +121,16 @@ public class EventSetTab implements Listener {
 		Team pTeam;
 		Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
 		String toUse = "_";
+		ArrayList<String> pto = new ArrayList<String>();
 		Iterator<PermissionAttachmentInfo> iterator = p.getEffectivePermissions().iterator();
 		while (iterator.hasNext()) {
 			String perm = iterator.next().getPermission();
 			if (perm.contains("wmctab")) {
-				toUse = perm.replace("wmctab.", "");
-				break;
+				pto.add(perm.replace("wmctab.", ""));
 			}
 		}
+		Collections.sort(pto);
+		toUse = pto.get(0);
 		Chat c = Main.getChat();
 		String puuidsub = p.getUniqueId().toString().substring(0, 8);
 		try {
@@ -137,7 +141,7 @@ public class EventSetTab implements Listener {
 					pTeam.setPrefix(c.getGroupPrefix(p.getWorld(), c.getPlayerGroups(p)[0]));
 				}
 			}
-
+			
 			pTeam.setOption(Option.COLLISION_RULE,
 					OptionStatus.valueOf(plugin.getConfig().getString("teams.collisionRule")));
 			pTeam.setOption(Option.DEATH_MESSAGE_VISIBILITY,
