@@ -15,6 +15,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Team;
 
+import com.palmergames.bukkit.TownyChat.config.ChatSettings;
+import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
+import com.palmergames.bukkit.towny.object.Nation;
+import com.palmergames.bukkit.towny.object.TownyUniverse;
+
 import main.java.utility.cmd.CmdBroad;
 import main.java.utility.cmd.CmdWmsg;
 import main.java.utility.cmd.CmdReload;
@@ -33,6 +38,7 @@ public class Main extends JavaPlugin {
 	public static Main plugin;
 
 	Random rint = new Random();
+	public static Boolean usingTowny;
 	int currentPos;
 
 	static String host, port, database, username, password;
@@ -46,12 +52,13 @@ public class Main extends JavaPlugin {
 		plugin = this;
 
 		Bukkit.getPluginManager().registerEvents(new EventSetTab(this), this);
-		/*try {
-			Bukkit.getPluginManager().registerEvents(new EventPlayerVote(this), this);
-		} catch (Exception noVotifier) {
-			System.out.println("No votifier found or other exceptions, read below\n" + noVotifier);
-		} */
-
+		/*
+		 * try { Bukkit.getPluginManager().registerEvents(new EventPlayerVote(this),
+		 * this); } catch (Exception noVotifier) {
+		 * System.out.println("No votifier found or other exceptions, read below\n" +
+		 * noVotifier); }
+		 */
+		
 		try {
 			ess = (IEssentials) Bukkit.getPluginManager().getPlugin("Essentials");
 		} catch (Exception ignore) {
@@ -74,48 +81,44 @@ public class Main extends JavaPlugin {
 					currentPos++;
 				}
 			}.runTaskTimer(plugin, 0L, Config.getInt("ab.time") * 20);
-		}
 
-		/*host = Config.getString("vl.host");
-		port = Config.getString("vl.port");
-		database = Config.getString("vl.database");
-		username = Config.getString("vl.username");
-		password = Config.getString("vl.password");
-		if (host != "") {
-			try {
-				openConnection();
-				vlstatement = connection.createStatement();
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-
-			(new BukkitRunnable() {
-				@Override
-				public void run() {
+			Bukkit.getScheduler().runTaskLater(plugin, () -> {
+				usingTowny = plugin.getServer().getPluginManager().isPluginEnabled("Towny");
+				if (usingTowny) {
 					try {
-						if (connection != null && !connection.isClosed()) {
-							connection.createStatement().execute("SELECT 1");
-						}
-					} catch (SQLException e) {
-						try {
-							openConnection();
-						} catch (ClassNotFoundException e1) {
-							e1.printStackTrace();
-						} catch (SQLException e1) {
-							e1.printStackTrace();
-						}
+						@SuppressWarnings({ "unused", "deprecation" })
+						Nation n = TownyUniverse.getDataSource().getNation("initializeasdasd412r");
+						@SuppressWarnings("unused")
+						String t2 = ChatSettings.getMayorColour();
+					} catch (Exception ignore) {
 					}
 				}
-			}).runTaskTimerAsynchronously(plugin, 60 * 20, 60 * 20); 
-		} */
+			}, 80L);
+		}
 	}
-	
+
+	/*
+	 * host = Config.getString("vl.host"); port = Config.getString("vl.port");
+	 * database = Config.getString("vl.database"); username =
+	 * Config.getString("vl.username"); password = Config.getString("vl.password");
+	 * if (host != "") { try { openConnection(); vlstatement =
+	 * connection.createStatement(); } catch (ClassNotFoundException e) {
+	 * e.printStackTrace(); } catch (SQLException e) { e.printStackTrace(); }
+	 * 
+	 * (new BukkitRunnable() {
+	 * 
+	 * @Override public void run() { try { if (connection != null &&
+	 * !connection.isClosed()) { connection.createStatement().execute("SELECT 1"); }
+	 * } catch (SQLException e) { try { openConnection(); } catch
+	 * (ClassNotFoundException e1) { e1.printStackTrace(); } catch (SQLException e1)
+	 * { e1.printStackTrace(); } } } }).runTaskTimerAsynchronously(plugin, 60 * 20,
+	 * 60 * 20); }
+	 */
+
 	@Override
 	public void onDisable() {
 		for (Team t : Bukkit.getScoreboardManager().getMainScoreboard().getTeams()) {
-			 t.unregister();
+			t.unregister();
 		}
 	}
 

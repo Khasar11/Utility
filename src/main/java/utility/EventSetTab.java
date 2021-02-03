@@ -48,8 +48,10 @@ public class EventSetTab implements Listener {
 			new BukkitRunnable() {
 				@Override
 				public void run() {
-					if (p.isOnline()) updateTab(p);
-					else cancel();
+					if (p.isOnline())
+						updateTab(p);
+					else
+						cancel();
 				}
 			}.runTaskTimer(plugin, 0L, 200L);
 		}
@@ -58,23 +60,17 @@ public class EventSetTab implements Listener {
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		if (plugin.getConfig().getBoolean("tab.enabled")) {
-			new BukkitRunnable() {
-				@Override
-				public void run() {
-
-					for (Player subP : Bukkit.getOnlinePlayers()) {
-						updateTab(subP);
-					}
-					Player p = event.getPlayer();
-					UUID pu = p.getUniqueId();
-					Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
-					for (Team t : scoreboard.getTeams()) {
-						if (t.getName().contains(pu.toString().substring(0, 8))) {
-							t.unregister();
-						}
-					}
+			for (Player subP : Bukkit.getOnlinePlayers()) {
+				updateTab(subP);
+			}
+			Player p = event.getPlayer();
+			UUID pu = p.getUniqueId();
+			Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
+			for (Team t : scoreboard.getTeams()) {
+				if (t.getName().contains(pu.toString().substring(0, 8))) {
+					t.unregister();
 				}
-			}.runTaskAsynchronously(plugin);
+			}
 		}
 	}
 
@@ -89,7 +85,6 @@ public class EventSetTab implements Listener {
 
 	public String replaceVariables(String replaceString, Player p) {
 		Chat c = Main.getChat();
-		Boolean isUsingT = plugin.getServer().getPluginManager().isPluginEnabled("Towny");
 		String[] pGroups = c.getPlayerGroups(p);
 		try {
 			int pCount = 0;
@@ -103,10 +98,9 @@ public class EventSetTab implements Listener {
 		}
 		replaceString = replaceString.replace("{MAXPLAYERS}", plugin.getServer().getMaxPlayers() + "")
 				.replace("{PLAYERS}", plugin.getServer().getOnlinePlayers().size() + "")
-				.replace("{USERNAME}", p.getName()).replace("{DISPLAYNAME}", p.getDisplayName())
-				.replace("{PREFIX}", c.getPlayerPrefix(p)).replace("{SUFFIX}", c.getPlayerSuffix(p));
+				.replace("{USERNAME}", p.getName()).replace("{DISPLAYNAME}", p.getDisplayName());
 		try {
-			if (isUsingT) {
+			if (Main.usingTowny) {
 				Resident r = TownyUniverse.getDataSource().getResident(p.getName());
 				replaceString = replaceString.replace("{TOWNYCOLOUR}", r.isKing() ? ChatSettings.getKingColour()
 						: (r.isMayor() ? ChatSettings.getMayorColour() : ChatSettings.getResidentColour()));
@@ -114,12 +108,10 @@ public class EventSetTab implements Listener {
 		} catch (Exception noTowny) {
 			replaceString = replaceString.replace("{TOWNYCOLOUR}", "");
 		}
-		if (c.getPlayerPrefix(p) == "") {
-			replaceString = replaceString.replace("{PREFIX}", c.getGroupPrefix(p.getWorld(), pGroups[0]));
-		}
-		if (c.getPlayerSuffix(p) == "") {
-			replaceString = replaceString.replace("{SUFFIX}", c.getGroupSuffix(p.getWorld(), pGroups[0]));
-		}
+		replaceString = (c.getPlayerPrefix(p) == null ? replaceString.replace("{PREFIX}", c.getPlayerPrefix(p))
+				: replaceString.replace("{PREFIX}", c.getGroupPrefix(p.getWorld(), pGroups[0])));
+		replaceString = (c.getPlayerSuffix(p) == null ? replaceString.replace("{SUFFIX}", c.getPlayerSuffix(p))
+				: replaceString.replace("{SUFFIX}", c.getGroupSuffix(p.getWorld(), pGroups[0])));
 		return ChatColor.translateAlternateColorCodes('&', replaceString);
 	}
 
